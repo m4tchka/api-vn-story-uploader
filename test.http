@@ -1,0 +1,4 @@
+GET http://localhost:8081/articles
+
+
+# POST http://localhost:8081/articles
