@@ -24,3 +24,7 @@ func testPostArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Test post endpoint hit")
 
 }
+uri := "mongodb+srv://" + url.QueryEscape(username) + ":" + 
+		url.QueryEscape(password) + "@" + cluster + 
+		"/?authSource=" + authSource +
+		"&authMechanism=" + authMechanism
