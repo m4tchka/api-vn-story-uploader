@@ -1,5 +1,9 @@
 package main
 
+type E struct {
+	Key   string
+	Value interface{}
+}
 type Article struct {
 	Title   string `json:"title"`
 	Desc    string `json:"desc"`
