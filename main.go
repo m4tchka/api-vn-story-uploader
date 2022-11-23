@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -43,6 +43,11 @@ func connectToDB() {
 	if err != nil {
 		panic(err)
 	}
+	// ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	// err = client.Connect(ctx)
+	// if err != nil {
+	// 	panic(err)
+	// }
 	defer func() { // delay execution of this anonymous function until the surrounding connectToDB function returns. Disconnects client instance.
 		if err := client.Disconnect(context.TODO()); err != nil {
 			panic(err)
@@ -106,7 +111,8 @@ func GetAllScenes(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func PostScene(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	fmt.Println("-------------POST SCENE FUNC TRIGGERED -----------------")
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
 	}
@@ -117,4 +123,12 @@ func PostScene(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	log.Println(s.Scene)
+	insertScene(s)
+}
+func insertScene(s SceneObj) {
+	insOneRes, err := coll.InsertOne(context.Background(), s)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Successfully inserted:", insOneRes)
 }

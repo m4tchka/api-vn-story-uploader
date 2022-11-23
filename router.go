@@ -15,6 +15,6 @@ func HandleRequests() {
 	myRouter.HandleFunc("/articles", AllArticles).Methods("GET")
 	myRouter.HandleFunc("/articles", TestPostArticles).Methods("POST")
 	myRouter.HandleFunc("/scenes" /* models. */, GetAllScenes).Methods("GET")
-	// myRouter.HandleFunc("/stories", allArticles).Methods("POST")
+	myRouter.HandleFunc("/scenes", PostScene).Methods("POST")
 	log.Fatal(http.ListenAndServe("127.0.0.1:8081", myRouter))
 }

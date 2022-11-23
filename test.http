@@ -1,4 +1,59 @@
-GET http://localhost:8081/articles
+# GET http://localhost:8081/articles
+
+GET http://localhost:8081/scenes
 
 
-# POST http://localhost:8081/articles
+# POST http://localhost:8081/scenes
+# Content-Type: application/json
+
+# {
+#  "id": 0,
+#  "Scene": [
+#   {
+#    "Name": "Aiko",
+#    "Dialogue": "Greetings !",
+#    "Background": "www.google.com/randomimg.png"
+#   },
+#   {
+#    "Name": "Aico",
+#    "Dialogue": "Dynamic entry !!"
+#   },
+#   {
+#    "Name": "Aiko",
+#    "Dialogue": "Waah ! Watch out, Aico !"
+#   },
+#   {
+#    "Name": "Aico",
+#    "Dialogue": "Heyaaa Aiko ! Can we go on a picnic pleaseeeee ??"
+#   },
+#   {
+#    "Name": "Aiko",
+#    "Dialogue": "Sure, sounds like fun ! Where should we go though ?"
+#   },
+#   {
+#    "Name": "",
+#    "Dialogue": "",
+#    "Question": "Where should we go ?",
+#    "Options": [
+#     {
+#      "Text": "Go to the forest valley",
+#      "Next": 0,
+#      "LuckChange": 1,
+#      "MinLuck": 0
+#     },
+#     {
+#      "Text": "Take the scenic route along the cliffside",
+#      "Next": 2,
+#      "LuckChange": 2,
+#      "MinLuck": 0
+#     },
+#     {
+#      "Text": "Follow the path through the forest",
+#      "Next": 3,
+#      "LuckChange": -1,
+#      "MinLuck": 0
+#     }
+#    ]
+#   }
+#  ]
+# }
