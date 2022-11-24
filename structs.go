@@ -16,15 +16,15 @@ type SceneObj struct {
 	Scene []DialogueObj `json:"scene"`
 }
 type DialogueObj struct {
-	Name       string      `json:"Name"`
-	Dialogue   string      `json:"Dialogue"`
-	Background string      `json:"Background,omitempty"`
-	Question   string      `json:"Question,omitempty"`
-	Options    []OptionObj `json:"Options,omitempty"`
+	Name       string      `json:"Name" bson:"Name"`
+	Dialogue   string      `json:"Dialogue" bson:"Dialogue"`
+	Background string      `json:"Background,omitempty" bson:"Background,omitempty"`
+	Question   string      `json:"Question,omitempty" bson:"Question,omitempty"`
+	Options    []OptionObj `json:"Options,omitempty" bson:"Options,omitempty"`
 }
 type OptionObj struct {
-	Text       string `json:"Text"`
-	Next       int    `json:"Next"`
-	LuckChange int    `json:"LuckChange"`
-	MinLuck    int    `json:"MinLuck"`
+	Text       string `json:"Text" bson:"Text,omitempty"`
+	Next       int    `json:"Next" bson:"Next,omitempty"`
+	LuckChange int    `json:"LuckChange" bson:"LuckChange,omitempty"`
+	MinLuck    int    `json:"MinLuck" bson:"MinLuck,omitempty"`
 }

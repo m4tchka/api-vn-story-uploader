@@ -1,6 +1,6 @@
 # GET http://localhost:8081/articles
-
 # GET http://localhost:8081/scenes
+GET http://localhost:8081/scenes/6
 
 # POST http://localhost:8081/scenes
 # Content-Type: application/json
@@ -57,4 +57,4 @@
 #  ]
 # }
 
-DELETE http://localhost:8081/scenes/2
+# DELETE http://localhost:8081/scenes/2

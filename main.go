@@ -92,7 +92,19 @@ func TestPostArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Test post endpoint hit")
 }
 
-// func GetSpecificScenes(w http.ResponseWriter,r *http.Request) {}
+func GetSpecificScene(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("-------------GET SPECIFIC SCENE FUNC TRIGGERED -----------------")
+	specificSceneId, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("----------------------------------------------")
+	var scene bson.M
+	if err := coll.FindOne(context.Background(), bson.M{"id": specificSceneId}).Decode(&scene); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Specific scene:", scene)
+}
 func GetAllScenes(w http.ResponseWriter, r *http.Request) {
 	cursor, err := coll.Find(context.TODO(), bson.M{})
 	if err != nil {

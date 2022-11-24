@@ -15,6 +15,7 @@ func HandleRequests() {
 	myRouter.HandleFunc("/articles", AllArticles).Methods("GET")
 	myRouter.HandleFunc("/articles", TestPostArticles).Methods("POST")
 	// ----------------------------------------------------------------
+	myRouter.HandleFunc("/scenes/{id}" /* models. */, GetSpecificScene).Methods("GET")
 	myRouter.HandleFunc("/scenes" /* models. */, GetAllScenes).Methods("GET")
 	myRouter.HandleFunc("/scenes", PostScene).Methods("POST")
 	myRouter.HandleFunc("/scenes/{id}", DeleteScene).Methods("DELETE")
