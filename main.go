@@ -8,7 +8,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -89,6 +91,8 @@ func AllArticles(w http.ResponseWriter, r *http.Request) {
 func TestPostArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Test post endpoint hit")
 }
+
+// func GetSpecificScenes(w http.ResponseWriter,r *http.Request) {}
 func GetAllScenes(w http.ResponseWriter, r *http.Request) {
 	cursor, err := coll.Find(context.TODO(), bson.M{})
 	if err != nil {
@@ -123,12 +127,29 @@ func PostScene(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	log.Println(s.Scene)
-	insertScene(s)
+	insertAScene(s)
 }
-func insertScene(s SceneObj) {
+func insertAScene(s SceneObj) {
 	insOneRes, err := coll.InsertOne(context.Background(), s)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("Successfully inserted:", insOneRes)
+}
+func DeleteScene(w http.ResponseWriter, r *http.Request) {
+	idToBeDeleted, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("----------------------------------------------")
+	fmt.Printf("id: %d of type %T\n", idToBeDeleted, idToBeDeleted)
+	deleteAScene(idToBeDeleted)
+}
+
+func deleteAScene(id int) {
+	var scene bson.M
+	if err := coll.FindOne(context.Background(), bson.M{"id": id}).Decode(&scene); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("scene:", scene)
 }
