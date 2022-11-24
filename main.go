@@ -17,23 +17,18 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func main() {
-	loadEnvVariables()
-	connectToDB()
-	// handleRequests()
-
-}
-
 var coll *mongo.Collection
 
-func loadEnvVariables() {
+func main() {
+	connectToDB()
+	// handleRequests()
+}
+func connectToDB() {
 	if err := godotenv.Load(); err != nil { // Attempt to load env, initialise an err variable and check if there is an error in 1 line.
 		log.Println("No .env file found")
 	} else {
-		log.Println("Env variables loaded")
+		log.Println("Env variables found")
 	}
-}
-func connectToDB() {
 	uri := os.Getenv("MONGODB_URI")
 	// Get the env variable with the key and initialise the uri variable with it.
 	if uri == "" {
@@ -57,26 +52,8 @@ func connectToDB() {
 	}()
 	coll = client.Database("VN").Collection("ChapterTest")
 	// Declare & initialise a collection variable based on the client variable initialised above, using a database from that instance and a collection from that database
-	// title := "Back to the Future"
-	// var result bson.M
-	// // Declare a result variable with a BSON M type
-	// err = coll.FindOne(context.TODO(), bson.D{primitive.E{Key: "title", Value: title}}).Decode(&result)
-	// if err == mongo.ErrNoDocuments {
-	// 	fmt.Printf("No document was found with the title %s\n", title)
-	// 	return
-	// }
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// jsonData, err := json.MarshalIndent(result, "", "    ")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Printf("%s\n", jsonData)
-	fmt.Println("----------------------------------------")
 	HandleRequests()
 }
-
 func HomePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Homepage endpoint hit")
 }
@@ -91,14 +68,12 @@ func AllArticles(w http.ResponseWriter, r *http.Request) {
 func TestPostArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Test post endpoint hit")
 }
-
 func GetSpecificScene(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("-------------GET SPECIFIC SCENE FUNC TRIGGERED -----------------")
+	fmt.Println("------------- GET SPECIFIC SCENE FUNC TRIGGERED -----------------")
 	specificSceneId, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("----------------------------------------------")
 	var scene bson.M
 	if err := coll.FindOne(context.Background(), bson.M{"id": specificSceneId}).Decode(&scene); err != nil {
 		log.Fatal(err)
@@ -106,6 +81,7 @@ func GetSpecificScene(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Specific scene:", scene)
 }
 func GetAllScenes(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("------------- GET ALL SCENES FUNC TRIGGERED -----------------")
 	cursor, err := coll.Find(context.TODO(), bson.M{})
 	if err != nil {
 		log.Fatal(err)
@@ -127,7 +103,7 @@ func GetAllScenes(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func PostScene(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("-------------POST SCENE FUNC TRIGGERED -----------------")
+	fmt.Println("------------- POST SCENE FUNC TRIGGERED -----------------")
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -149,15 +125,14 @@ func insertAScene(s SceneObj) {
 	fmt.Println("Successfully inserted:", insOneRes)
 }
 func DeleteScene(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("------------- DELETE SCENE FUNC TRIGGERED -----------------")
 	idToBeDeleted, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("----------------------------------------------")
 	fmt.Printf("id: %d of type %T\n", idToBeDeleted, idToBeDeleted)
 	deleteAScene(idToBeDeleted)
 }
-
 func deleteAScene(id int) {
 	var scene bson.M
 	if err := coll.FindOne(context.Background(), bson.M{"id": id}).Decode(&scene); err != nil {

@@ -10,6 +10,7 @@ import (
 )
 
 func HandleRequests() {
+	log.Println("Server running ...")
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", HomePage)
 	myRouter.HandleFunc("/articles", AllArticles).Methods("GET")
