@@ -103,14 +103,15 @@ func GetAllScenes(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Scene printed >>>", scn)
 	}
 	defer cursor.Close(context.TODO())
-	// for cursor.Next(context.TODO()) {
-	// 	var scene bson.M
-	// 	if err = cursor.Decode(&scene); err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	fmt.Println(scene)
-	// }
-	// fmt.Fprintf(w, "All scenes: -------------\n%v\n", scenes)
+	/*
+		for cursor.Next(context.TODO()) {
+			var scene bson.M
+			if err = cursor.Decode(&scene); err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(scene)
+		}
+	*/
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
@@ -131,6 +132,10 @@ func PostScene(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(s.Scene)
 	insertAScene(s)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	json.NewEncoder(w).Encode(s)
 }
 func insertAScene(s m.SceneObj) {
 	insOneRes, err := Coll.InsertOne(context.Background(), s)
@@ -147,6 +152,9 @@ func DeleteScene(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("id: %d of type %T\n", idToBeDeleted, idToBeDeleted)
 	deleteAScene(idToBeDeleted)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 func deleteAScene(id int) {
 	var scene bson.M
