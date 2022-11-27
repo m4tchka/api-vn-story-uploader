@@ -19,5 +19,5 @@ func main() {
 			panic(err)
 		}
 	}()
-	log.Fatal(http.ListenAndServe("0.0.0.0:"+os.Getenv("PORT"), router))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), router))
 }

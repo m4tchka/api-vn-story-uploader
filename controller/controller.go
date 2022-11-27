@@ -62,6 +62,11 @@ func AllArticles(w http.ResponseWriter, r *http.Request) {
 		m.Article{Title: "Test title2", Desc: "Test description2", Content: "Hello world2!"},
 	}
 	fmt.Println("Endpoint hit: All articles")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	//https://stackoverflow.com/questions/39507065/enable-cors-in-golang
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(articles)
 }
 func TestPostArticles(w http.ResponseWriter, r *http.Request) {
@@ -79,6 +84,10 @@ func GetSpecificScene(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	fmt.Println("Specific scene:", scene)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	json.NewEncoder(w).Encode(scene)
 }
 func GetAllScenes(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("------------- GET ALL SCENES FUNC TRIGGERED -----------------")
@@ -86,21 +95,27 @@ func GetAllScenes(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// var scenes []bson.M []bson.D
-	// if err = cursor.All(context.TODO(), &scenes); err != nil {
-	// 	log.Fatal(err)
-	// }
-	// for _, scn := range scenes {
-	// 	fmt.Println(scn["scene"])
-	// }
-	defer cursor.Close(context.TODO())
-	for cursor.Next(context.TODO()) {
-		var scene bson.D
-		if err = cursor.Decode(&scene); err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(scene)
+	var scenes []bson.M // Must not be bson.D
+	if err = cursor.All(context.TODO(), &scenes); err != nil {
+		log.Fatal(err)
 	}
+	for _, scn := range scenes {
+		fmt.Println("Scene printed >>>", scn)
+	}
+	defer cursor.Close(context.TODO())
+	// for cursor.Next(context.TODO()) {
+	// 	var scene bson.M
+	// 	if err = cursor.Decode(&scene); err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	fmt.Println(scene)
+	// }
+	// fmt.Fprintf(w, "All scenes: -------------\n%v\n", scenes)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	json.NewEncoder(w).Encode(scenes)
+
 }
 func PostScene(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("------------- POST SCENE FUNC TRIGGERED -----------------")
