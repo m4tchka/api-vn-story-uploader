@@ -38,48 +38,44 @@ func ConnectToDB() *mongo.Client {
 	if err != nil {
 		panic(err)
 	}
-	// ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	// err = client.Connect(ctx)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	/* defer func() { // delay execution of this anonymous function until the surrounding connectToDB function returns. Disconnects client instance.
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}() */
+	/* 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	   	err = client.Connect(ctx)
+	   	if err != nil {
+	   		panic(err)
+	   	} */
 	Coll = client.Database("VN").Collection("ChapterTest")
 	// Declare & initialise a collection variable based on the client variable initialised above, using a database from that instance and a collection from that database
-	return client
+	return client // Return the connected client instance
 
 }
-func HomePage(w http.ResponseWriter, r *http.Request) {
+func HomePage(w http.ResponseWriter, r *http.Request) { // Homepage route that simply prints a string.
 	fmt.Fprintf(w, "Homepage endpoint hit")
 }
-func AllArticles(w http.ResponseWriter, r *http.Request) {
+func AllArticles(w http.ResponseWriter, r *http.Request) { // Test endpoint that returns a list of articles
 	articles := m.Articles{
 		m.Article{Title: "Test title", Desc: "Test description", Content: "Hello world!"},
 		m.Article{Title: "Test title2", Desc: "Test description2", Content: "Hello world2!"},
 	}
-	fmt.Println("Endpoint hit: All articles")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	log.Println("Endpoint hit: All articles")
+	w.Header().Set("Content-Type", "application/json")             // Indicates that the request body format is JSON.
+	w.Header().Set("Access-Control-Allow-Origin", "*")             // Indicates that code from any origin is allowed to access this endpoint.
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type") // Indicates that any request must have the header of "Content-Type"
 	//https://stackoverflow.com/questions/39507065/enable-cors-in-golang
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(articles)
-}
-func TestPostArticles(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Test post endpoint hit")
+	w.WriteHeader(http.StatusOK)        // Give the response a header of "200 OK"
+	json.NewEncoder(w).Encode(articles) // Write to the body of the respnose, the articles defined above.
 }
 
+//	func TestPostArticles(w http.ResponseWriter, r *http.Request) {
+//		fmt.Fprintf(w, "Test post endpoint hit")
+//	}
 func GetSpecificScene(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("------------- GET SPECIFIC SCENE FUNC TRIGGERED -----------------")
-	specificSceneId, err := strconv.Atoi(mux.Vars(r)["id"])
+	log.Println("------------- GET SPECIFIC SCENE FUNC TRIGGERED -----------------")
+	specificSceneId, err := strconv.Atoi(mux.Vars(r)["id"]) //Take the variable from the parameter of the request and store it in specificSceneId
 	if err != nil {
 		panic(err)
 	}
-	var scene bson.M
+	var scene bson.M // Declare the variable scene, of type bson.M
+	// bson.M is a MongoDB-specific type that is useful when the specific order of keys in an object is NOT important. If it did matter, bson.D would be more suitable.
 	if err := Coll.FindOne(context.Background(), bson.M{"id": specificSceneId}).Decode(&scene); err != nil {
 		log.Fatal(err)
 	}
@@ -90,7 +86,7 @@ func GetSpecificScene(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(scene)
 }
 func GetAllScenes(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("------------- GET ALL SCENES FUNC TRIGGERED -----------------")
+	log.Println("------------- GET ALL SCENES FUNC TRIGGERED -----------------")
 	cursor, err := Coll.Find(context.TODO(), bson.M{})
 	if err != nil {
 		log.Fatal(err)
@@ -119,12 +115,12 @@ func GetAllScenes(w http.ResponseWriter, r *http.Request) {
 
 }
 func PostScene(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("------------- POST SCENE FUNC TRIGGERED -----------------")
+	log.Println("------------- POST SCENE FUNC TRIGGERED -----------------")
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
 	}
-	log.Println(string(body))
+	// log.Println(string(body))
 	var s m.SceneObj
 	err = json.Unmarshal(body, &s)
 	if err != nil {
@@ -145,7 +141,7 @@ func insertAScene(s m.SceneObj) {
 	fmt.Println("Successfully inserted:", insOneRes)
 }
 func DeleteScene(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("------------- DELETE SCENE FUNC TRIGGERED -----------------")
+	log.Println("------------- DELETE SCENE FUNC TRIGGERED -----------------")
 	idToBeDeleted, err := strconv.Atoi(mux.Vars(r)["id"])
 	if err != nil {
 		panic(err)
